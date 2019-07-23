@@ -1,0 +1,15 @@
+{
+	"test_default":
+	{	
+		"common":
+		 	{
+		 			"input_values":{
+						"test_input":"hello world!!!"
+					},
+					"expected_values":{
+						"search_box_appears":true,
+		 				"search_box_importable":true
+					}
+		 }
+	}
+}
