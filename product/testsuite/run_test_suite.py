@@ -7,7 +7,7 @@ from product.testsuite import html_runner
 
 class  RunDailyRegression(unittest.TestCase):
     def test_run(self):
-        report_repository = "C:/Users/xiaos5/Documents/Reports/"
+        report_repository = "C:/Users/xiaobo/Documents/Test_Reports/"
         currentTime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")        
         report = report_repository + currentTime + ".html"
         outfile = open(report, "w")
