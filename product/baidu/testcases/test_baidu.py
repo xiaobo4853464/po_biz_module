@@ -7,13 +7,14 @@ Created on Aug 8, 2018
 import unittest
 
 from framework.ui.page_object_testcase import get_testdata_dec, PageObjectTestCase
-from product.baidu.pages.baidu import Baidu
+from product.baidu.modules.baidu import Baidu
 
 
 class TestBaiDu(PageObjectTestCase):
     """
     a doc for test
     """
+
     def setUp(self):
         self.browser = self.start_browser("Chrome")
         self.test_module = Baidu(self.browser)
