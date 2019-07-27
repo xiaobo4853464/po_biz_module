@@ -27,6 +27,7 @@ class TestBaiDu(PageObjectTestCase):
         input_data = testdata[1]
         input_box = self.test_module.search_box()
         input_box.send_keys(input_data["test_input"])
+        self.biz_module_test(expect_data,expect_data)
 
     # #         btn.click()
     # #         btn.click_by_js()

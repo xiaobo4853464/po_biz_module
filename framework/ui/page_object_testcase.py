@@ -6,13 +6,15 @@ Created on Aug 10, 2018
 from collections import OrderedDict
 import inspect
 import os
+import json
+import ast
 from functools import wraps
 from selenium import webdriver
 
 # from libs.Json_handler import json_get, jsonFile_get, assertJson
 # from ui.web_testcase import WebTestCase
 from framework.libs.Json_handler import json_get, jsonFile_get, assertJson
-from framework.ui.web_testcase import WebTestCase
+from framework.ui.base_test_case import BaseTestCase
 
 
 def get_expected_value_dec(func):
@@ -80,7 +82,7 @@ def get_testdata(obj):
     return testdata_with_platform
 
 
-class PageObjectTestCase(WebTestCase):
+class PageObjectTestCase(BaseTestCase):
     def start_browser(self, browser_name="firefox"):
         if browser_name.lower() == "firefox":
             browser = webdriver.Firefox()
@@ -193,6 +195,38 @@ class PageObjectTestCase(WebTestCase):
             elif not isinstance(v, dict):
                 actual[k] = None
         return actual, has_sub_biz_module
+
+    def print_test_message(self, expected_value, compared_diff_msg):
+        '''
+        print the checkpoints' test result as human language
+        '''
+        for checkpoint, expected in expected_value.items():
+            try:
+                checkpoint_detail_result = json_get(ast.literal_eval(str(compared_diff_msg).
+                                                                     replace("[", "").
+                                                                     replace("]", "").
+                                                                     replace('"', "")), "$..%s" % checkpoint)
+            except:
+                checkpoint_detail_result = compared_diff_msg
+            pass_the_checkpoint = checkpoint_detail_result is None
+            print_message = checkpoint.replace("_", " ")
+            if isinstance(expected, bool):
+                if expected == False:
+                    print_message = (print_message.replace("is", "is not")
+                                  .replace("appear", "not appear")
+                                  .replace("exist", "not exist"))
+            if  pass_the_checkpoint:
+                if isinstance(expected, bool):
+                    print ("[Pass check point] check %s" % print_message )
+                else:
+                    print ("[Pass check point] check %s with [expected_value]--> %s" % (print_message, expected))
+            else:
+                if isinstance(expected, bool):
+                    checkpoint_detail_result = ""
+                else:
+                    checkpoint_detail_result = ("\r\n[compare result]:\r\n"
+                    + json.dumps(checkpoint_detail_result, indent=4, ensure_ascii=False))
+                print ("[Fail check point] check %s" % (print_message + checkpoint_detail_result))
 
     def disable_javascript_in_html(self, browser):
         browser.execute_script("window.onbeforeunload = function() {};")

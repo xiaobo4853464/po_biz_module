@@ -104,12 +104,7 @@ def get_current_branch_locator(func):
     elif hasattr(func, "common_branch_locator"):
         return func.common_branch_locator
     else:
-        raise Exception("\[Automation Rule]\r\n\
-        locator of %s() for both current branch and all branch are all not given\r\n\
-        make sure your branch_list parameter's value is as below example:\r\n\
-        for multiple branches: branch_list=['4.7.000','4.7.100'] \r\n\
-        for single branch: branch_list=['4.7.000']\r\n\
-        " % func.__name__)
+        raise Exception("Cannot found branch locator")
 
 
 def get_selenium_lib(args):

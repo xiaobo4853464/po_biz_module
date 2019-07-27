@@ -8,49 +8,8 @@ import unittest
 from framework.libs.Json_handler import json_get
 
 
-class WebTestCase(unittest.TestCase):
-    
-    @classmethod
-    def setUpClass(cls):
-        super(WebTestCase, cls).setUpClass()
-    
-    @classmethod
-    def tearDownClass(cls):
-        super(WebTestCase, cls).tearDownClass()
-   
-    
-    def print_test_message(self, expected_value, compared_diff_msg):
-        '''
-        print the checkpoints' test result as human language
-        '''
-        for checkpoint, expected in expected_value.items():
-            try:
-                checkpoint_detail_result = json_get(ast.literal_eval(str(compared_diff_msg).
-                                                                     replace("[", "").
-                                                                     replace("]", "").
-                                                                     replace('"', "")), "$..%s" % checkpoint)
-            except:
-                checkpoint_detail_result = compared_diff_msg
-            pass_the_checkpoint = checkpoint_detail_result is None
-            print_message = checkpoint.replace("_", " ")
-            if isinstance(expected, bool):
-                if expected == False: 
-                    print_message = (print_message.replace("is", "is not")
-                                  .replace("appear", "not appear")
-                                  .replace("exist", "not exist"))
-            if  pass_the_checkpoint:
-                if isinstance(expected, bool):
-                    print ("[Pass check point] check %s" % print_message )
-                else:
-                    print ("[Pass check point] check %s with [expected_value]--> %s" % (print_message, expected)) 
-            else:
-                if isinstance(expected, bool):
-                    checkpoint_detail_result = ""
-                else:
-                    checkpoint_detail_result = ("\r\n[compare result]:\r\n" 
-                    + json.dumps(checkpoint_detail_result, indent=4, ensure_ascii=False))
-                print ("[Fail check point] check %s" % (print_message + checkpoint_detail_result))
-                
+class BaseTestCase(unittest.TestCase):
+
     def skip_test(self,msg):
         if hasattr(self, 'browser'):
             self.browser.quit()
@@ -154,7 +113,7 @@ class WebTestCase(unittest.TestCase):
                          output_failed_msg=None,screen_shot=True):
     
         try:
-            self.assertEqual(current_result, expected_result) 
+            self.assertEqual(current_result, expected_result)
             if output_success_msg:
                 print(output_success_msg)
         except AssertionError as error:
