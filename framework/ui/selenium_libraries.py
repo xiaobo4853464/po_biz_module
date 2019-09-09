@@ -78,7 +78,7 @@ class SeleniumLibraries(object):
 
     def __findelements_refresh(self, refresh_browser_sequence, locator, timeout, find_elements):
         if refresh_browser_sequence > timeout:
-            raise "refresh_browser_sequence's value should not be more than timeout's value"
+            raise Exception("refresh_browser_sequence's value should not be more than timeout's value")
         try:
             # self.browser.implicitly_wait(refresh_browser_sequence)
             refresh_browser_times = timeout / refresh_browser_sequence
@@ -145,8 +145,8 @@ class SeleniumLibraries(object):
             print("Need add screenshot code")
         return None
 
-    def web_elements_wrapper(self, elem):
-        return [WebElement_Wrapper(e) for e in elem]
+    def web_elements_wrapper(self, elem, by_method, expression):
+        return [WebElement_Wrapper(e, by_method, expression) for e in elem]
 
     def take_screen_shot(self, browser):
         dir_name = "C:/Users/xiaos5/Pictures/webdriver/{}".format(
