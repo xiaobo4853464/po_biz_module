@@ -5,6 +5,7 @@ Created on Aug 15, 2018
 '''
 from functools import wraps
 import traceback
+import time
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.select import Select
@@ -36,6 +37,7 @@ def print_call_msg_decorator(func):
         msg = msg.replace("()", "")
         print(msg)
         func(*arg)
+        time.sleep(2)
 
     return wrapped
 

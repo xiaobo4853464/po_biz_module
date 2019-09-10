@@ -50,19 +50,20 @@ def build_webelement(xpath=None, css=None, id=None, class_name=None, tag_name=No
 
             selenium_lib = get_selenium_lib(args)
 
+            selenium_lib.function_name = func.__name__
             actual_element = selenium_lib.find_element(locator
                                                        , find_elements=find_elements
                                                        , iframe_locator=iframe_locator
                                                        , timeout=timeout
                                                        , stop_test_when_exception=False
-                                                       , refresh_browser_sequence=0
                                                        , print_not_found_element=print_not_found_element_message
                                                        , screen_shot=screen_shot
                                                        )
 
-            if print_time_cost == True:
+            if print_time_cost:
                 print(
                     "[Total Time Cost] %s (H:M:S)" % (time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time))))
+
             return func(args, actual_element)
 
         return build_webelement_wrapped

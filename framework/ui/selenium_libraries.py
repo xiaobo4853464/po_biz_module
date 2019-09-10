@@ -21,7 +21,6 @@ class SeleniumLibraries(object):
                      , iframe_locator=None
                      , timeout=0
                      , stop_test_when_exception=True
-                     , refresh_browser_sequence=0
                      , print_not_found_element=True
                      , screen_shot=True
                      ):
@@ -37,7 +36,6 @@ class SeleniumLibraries(object):
                                     , find_elements=find_elements
                                     , timeout=timeout
                                     , stop_test_when_exception=stop_test_when_exception
-                                    , refresh_browser_sequence=refresh_browser_sequence
                                     , print_not_found_element=print_not_found_element
                                     , screen_shot=screen_shot
                                     )
@@ -47,35 +45,22 @@ class SeleniumLibraries(object):
                         , find_elements
                         , timeout=0
                         , stop_test_when_exception=True
-                        , refresh_browser_sequence=0
                         , print_not_found_element=True
                         , screen_shot=True):
+
         stop_test = stop_test_when_exception
-        #         self.browser.implicitly_wait(5)
+
         try:
-            if timeout == 0 or refresh_browser_sequence == 0:
-                return self.__findelements_softwait(locator, timeout, find_elements)
-            else:
-                return self.__findelements_refresh(refresh_browser_sequence
-                                                   , locator
-                                                   , timeout
-                                                   , find_elements)
+            return self.__find_elem_common(locator, timeout, find_elements)
         except:
-            return self.find_element_exception(locator
+            return self.find_element_exception(locator=locator
                                                , stop_test_when_exception=stop_test
                                                , print_not_found_element=print_not_found_element,
                                                screen_shot=screen_shot)
         finally:
             self.browser.implicitly_wait(self.default_wait_time)
 
-    def __findelements_softwait(self, locator, timeout, find_elements):
-        if find_elements == False:
-            elements = self.__find_elem_common(locator, timeout)
-        else:
-            elements = self.__find_elem_common(locator, timeout, find_elements=True)  # find elements
-        self.browser.implicitly_wait(self.default_wait_time)
-        return elements
-
+    # to be enhancement
     def __findelements_refresh(self, refresh_browser_sequence, locator, timeout, find_elements):
         if refresh_browser_sequence > timeout:
             raise Exception("refresh_browser_sequence's value should not be more than timeout's value")
@@ -140,8 +125,13 @@ class SeleniumLibraries(object):
         if stop_test_when_exception:
             raise Exception("[Fail] Go to get Element by %s" % str(locator))
         if print_not_found_element:
-            print("[Fail] Go to get Element by %s" % str(locator))
+            if hasattr(self, "function_name"):
+                failed_message = "[Fail] Go to get Element '%s' by %s" % (self.function_name, str(locator))
+            else:
+                failed_message = "[Fail] Go to get Element by %s" % str(locator)
+            print(failed_message)
         if screen_shot:
+            # self.take_screen_shot(self.browser)
             print("Need add screenshot code")
         return None
 
